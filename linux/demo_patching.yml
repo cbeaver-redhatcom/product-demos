@@ -1,7 +1,9 @@
 ---
 - name: Linux server patching
-  hosts: new.beaverdam.com
+  hosts: all
   become: true
+  vars:
+    report_server: report.beaverdam.com
   tasks:
     # Install yum-utils if it's not there
     - name: Install yum-utils
@@ -12,6 +14,7 @@
     - name: Include patching role
       ansible.builtin.include_role:
         name: demo.patching.patch_linux
+      delegate_to: new.beaverdam.com
 
     - name: Tell user when Insights Client is not configured
       ansible.builtin.debug:
@@ -25,43 +28,42 @@
         - not ansible_check_mode
         - ansible_local.insights.system_id is defined
 
-# - name: 
-#     - name: Deploy report server
-#       when: not ansible_check_mode
-#       delegate_to: "{{ report_server }}"
-#       run_once: true  # noqa: run-once[task]
-#       block:
-#         - name: Install firewall dependencies
-#           ansible.builtin.dnf:
-#             name:
-#               - firewalld
-#               - python3-firewall
-#             state: present
+    - name: Deploy report server
+      when: not ansible_check_mode
+      delegate_to: "{{ report_server }}"
+      run_once: true  # noqa: run-once[task]
+      block:
+        - name: Install firewall dependencies
+          ansible.builtin.dnf:
+            name:
+              - firewalld
+              - python3-firewall
+            state: present
 
-#         - name: Start firewalld
-#           ansible.builtin.service:
-#             name: firewalld
-#             state: started
+        - name: Start firewalld
+          ansible.builtin.service:
+            name: firewalld
+            state: started
 
-#         - name: Enable firewall http service
-#           ansible.posix.firewalld:
-#             service: '{{ item }}'
-#             state: enabled
-#             immediate: true
-#             permanent: true
-#           loop:
-#             - http
-#             - https
+        - name: Enable firewall http service
+          ansible.posix.firewalld:
+            service: '{{ item }}'
+            state: enabled
+            immediate: true
+            permanent: true
+          loop:
+            - http
+            - https
 
-#         - name: Build report server
-#           ansible.builtin.include_role:
-#             name: "{{ item }}"
-#           loop:
-#             - demo.patching.report_server
-#             - demo.patching.report_linux
-#             - demo.patching.report_linux_patching
+        - name: Build report server
+          ansible.builtin.include_role:
+            name: "{{ item }}"
+          loop:
+            - demo.patching.report_server
+            - demo.patching.report_linux
+            - demo.patching.report_linux_patching
 
-#         - name: Publish landing page
-#           ansible.builtin.include_role:
-#             name: demo.patching.report_server
-#             tasks_from: linux_landing_page
+        - name: Publish landing page
+          ansible.builtin.include_role:
+            name: demo.patching.report_server
+            tasks_from: linux_landing_page
