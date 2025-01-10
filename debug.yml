@@ -10,6 +10,7 @@
     - name: Initiate error 
       ansible.builtin.command:
         cmd: "echo {{ undefined_var }}"
+      ignore_errors: true 
 
     - name: Print data 
       ansible.builtin.debug:
@@ -18,6 +19,7 @@
     - name: Initiate error 
       ansible.builtin.command:
         cmd: "echo {{ undefined_var_2 }}"
+      ignore_errors: true
 
     - name: Print data 
       ansible.builtin.debug:
