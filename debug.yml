@@ -7,25 +7,17 @@
       ansible.builtin.debug:
         var: ansible_facts 
 
-    - name: Print data 
-      ansible.builtin.debug:
-        var: ansible_facts 
-
     - name: Initiate error 
-      ansible.builtin.debug:
-        var: undefined_var
-
-    - name: Print data 
-      ansible.builtin.debug:
-        var: ansible_facts 
+      ansible.builtin.command:
+        cmd: "echo {{ undefined_var }}"
 
     - name: Print data 
       ansible.builtin.debug:
         var: ansible_facts 
 
     - name: Initiate error 
-      ansible.builtin.debug:
-        var: undefined_var_2
+      ansible.builtin.command:
+        cmd: "echo {{ undefined_var_2 }}"
 
     - name: Print data 
       ansible.builtin.debug:
