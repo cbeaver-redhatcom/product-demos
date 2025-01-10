@@ -1,6 +1,7 @@
 ---
 - name: Install packages & initiate services post deploy
   hosts: new.beaverdam.com 
+  gather_facts: false 
   become: true 
   vars:
     db_srvr_pkg: postgresql-server
