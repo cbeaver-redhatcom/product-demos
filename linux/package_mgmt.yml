@@ -1,0 +1,43 @@
+---
+- name: Install packages & initiate services post deploy
+  hosts: new.beaverdam.com 
+  become: true 
+  vars:
+    db_srvr_pkg: postgresql-server
+    web_srvr_pkg: httpd 
+  tasks:
+
+    - name: Run post deploy on DB server 
+      block:
+        - name: Install postgresql 
+          ansible.builtin.dnf:
+            name: "{{ db_srvr_pkg }}"
+            state: present 
+        
+        - name: Start postgresql service and enable it 
+          ansible.builtin.service:
+            name: postgres 
+            state: start 
+            enabled: true 
+      when: server_type == "database server"
+
+    - name: Run post deploy on web server 
+      block:
+        - name: Install apache 
+          ansible.builtin.dnf:
+            name: "{{ web_srvr_pkg }}"
+            state: present 
+        
+        - name: Apply foo config template 
+          ansible.builtin.template:
+            src: templates/index.j2
+            dest: /var/www/httpd/index.html
+            owner: apache 
+            group: apache 
+
+        - name: Start postgresql service and enable it 
+          ansible.builtin.service:
+            name: httpd 
+            state: start 
+            enabled: true 
+      when: server_type == "web server"
