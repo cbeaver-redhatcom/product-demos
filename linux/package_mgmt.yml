@@ -16,7 +16,7 @@
         
         - name: Start postgresql service and enable it 
           ansible.builtin.service:
-            name: postgres 
+            name: postgresql 
             state: started 
             enabled: true 
       when: server_type == "database server"
