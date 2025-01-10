@@ -13,6 +13,10 @@
           ansible.builtin.dnf:
             name: "{{ db_srvr_pkg }}"
             state: present 
+
+        - name: Initiate database cluster 
+          ansible.builtin.command:
+            cmd: postgresql-setup --initdb
         
         - name: Start postgresql service and enable it 
           ansible.builtin.service:
