@@ -40,7 +40,7 @@
             owner: apache 
             group: apache 
 
-        - name: Start postgresql service and enable it 
+        - name: Start apache service and enable it 
           ansible.builtin.service:
             name: httpd 
             state: started 
