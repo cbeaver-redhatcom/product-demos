@@ -1,6 +1,6 @@
 ---
 - name: Linux server patching
-  hosts: all
+  hosts: new.beaverdam.com
   become: true
   vars:
     report_server: report.beaverdam.com
@@ -14,7 +14,6 @@
     - name: Include patching role
       ansible.builtin.include_role:
         name: demo.patching.patch_linux
-      delegate_to: new.beaverdam.com
 
     - name: Tell user when Insights Client is not configured
       ansible.builtin.debug:
