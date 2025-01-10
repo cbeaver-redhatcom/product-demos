@@ -17,7 +17,7 @@
         - name: Start postgresql service and enable it 
           ansible.builtin.service:
             name: postgres 
-            state: start 
+            state: started 
             enabled: true 
       when: server_type == "database server"
 
@@ -38,6 +38,6 @@
         - name: Start postgresql service and enable it 
           ansible.builtin.service:
             name: httpd 
-            state: start 
+            state: started 
             enabled: true 
       when: server_type == "web server"
